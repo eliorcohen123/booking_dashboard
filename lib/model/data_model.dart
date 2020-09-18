@@ -1,5 +1,4 @@
-
-class DataModel{
+class DataModel {
   final String serviceName;
   final String date;
   final String time;

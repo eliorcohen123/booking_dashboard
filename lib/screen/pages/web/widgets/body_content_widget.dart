@@ -1,5 +1,7 @@
-import 'package:booking_management_dashboard/repository/fake_repository.dart';
+import 'dart:async';
+import 'package:booking_management_dashboard/model/data_model_firebase.dart';
 import 'package:booking_management_dashboard/utils/responsive_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -10,7 +12,24 @@ class BodyContentWidget extends StatefulWidget {
 
 class _BodyContentWidgetState extends State<BodyContentWidget> {
   int _rowCurrentBtnIndex = 0;
-  final _data = FakeRepository.data;
+  final Stream<QuerySnapshot> _snapshots =
+      Firestore.instance.collection('bookingData').orderBy('date').snapshots();
+  StreamSubscription<QuerySnapshot> _bookingSub;
+  List<DataModelFirebase> _dataBooking = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _readFirebase();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _bookingSub?.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -330,8 +349,7 @@ class _BodyContentWidgetState extends State<BodyContentWidget> {
         margin: EdgeInsets.symmetric(
             horizontal: ResponsiveScreen().webWidthMediaQuery(context, 20)),
         child: GridView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _data.length,
+          itemCount: _dataBooking.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount:
                   ResponsiveScreen().webWidthMediaQuery(context, 1097) <= 860
@@ -370,7 +388,7 @@ class _BodyContentWidgetState extends State<BodyContentWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _data[index].serviceName,
+                        _dataBooking[index].name,
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -399,7 +417,7 @@ class _BodyContentWidgetState extends State<BodyContentWidget> {
                               style: TextStyle(
                                   color: Colors.grey[600], fontSize: 14)),
                           Text(
-                            _data[index].date,
+                            _dataBooking[index].date,
                             style: TextStyle(fontSize: 16),
                           )
                         ],
@@ -411,7 +429,7 @@ class _BodyContentWidgetState extends State<BodyContentWidget> {
                               style: TextStyle(
                                   color: Colors.grey[600], fontSize: 14)),
                           Text(
-                            _data[index].time,
+                            _dataBooking[index].time,
                             style: TextStyle(fontSize: 16),
                           )
                         ],
@@ -434,6 +452,24 @@ class _BodyContentWidgetState extends State<BodyContentWidget> {
           },
         ),
       ),
+    );
+  }
+
+  void _readFirebase() {
+    _bookingSub?.cancel();
+    _bookingSub = _snapshots.listen(
+      (QuerySnapshot snapshot) {
+        final List<DataModelFirebase> dataBooking = snapshot.documents
+            .map(
+              (documentSnapshot) =>
+                  DataModelFirebase.fromFirebase(documentSnapshot.data),
+            )
+            .toList();
+
+        setState(() {
+          _dataBooking = dataBooking;
+        });
+      },
     );
   }
 }

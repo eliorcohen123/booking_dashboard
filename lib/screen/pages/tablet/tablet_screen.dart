@@ -18,8 +18,7 @@ class TabletScreen extends StatelessWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     child: BodyContentTabletWidget(
-                      sizingInformation: sizingInformation,
-                    ),
+                        sizingInformation: sizingInformation),
                   ),
                 ),
               ],
