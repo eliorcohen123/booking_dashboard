@@ -1,3 +1,4 @@
+import 'package:booking_management_dashboard/constants/ConstantsImage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,7 @@ class DrawerMobile extends StatelessWidget {
           Container(
             width: 80,
             height: 80,
-            child: Image.asset("assets/logo.png"),
+            child: Image.asset(ConstantsImages.LOGO),
           ),
           Container(
             child: Row(
@@ -31,7 +32,7 @@ class DrawerMobile extends StatelessWidget {
                 Container(
                     width: 40,
                     height: 40,
-                    child: Image.asset("assets/profile.png")),
+                    child: Image.asset(ConstantsImages.PROFILE)),
                 Text(
                   "Amir Khan!",
                   style: TextStyle(fontSize: 18),

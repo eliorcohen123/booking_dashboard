@@ -1,3 +1,4 @@
+import 'package:booking_management_dashboard/constants/ConstantsImage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +42,7 @@ class _TabletVerticalNavWidgetState extends State<TabletVerticalNavWidget> {
     return Container(
       width: 45,
       height: 45,
-      child: Image.asset("assets/logo.png"),
+      child: Image.asset(ConstantsImages.LOGO),
     );
   }
 

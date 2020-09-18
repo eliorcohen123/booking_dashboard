@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'package:booking_management_dashboard/constants/ConstantsImage.dart';
 import 'package:booking_management_dashboard/model/data_model_firebase.dart';
 import 'package:booking_management_dashboard/utils/responsive_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:websafe_svg/websafe_svg.dart';
 
 class BodyContentWidget extends StatefulWidget {
   @override
@@ -16,6 +18,7 @@ class _BodyContentWidgetState extends State<BodyContentWidget> {
       Firestore.instance.collection('bookingData').orderBy('date').snapshots();
   StreamSubscription<QuerySnapshot> _bookingSub;
   List<DataModelFirebase> _dataBooking = [];
+  bool _isDisplayGrid = true;
 
   @override
   void initState() {
@@ -43,7 +46,7 @@ class _BodyContentWidgetState extends State<BodyContentWidget> {
           SizedBox(
             height: ResponsiveScreen().webHeightMediaQuery(context, 5),
           ),
-          _gridListItems(),
+          _isDisplayGrid ? _gridListItems() : _listViewItems(),
         ],
       ),
     );
@@ -317,6 +320,8 @@ class _BodyContentWidgetState extends State<BodyContentWidget> {
                   : Colors.transparent,
             ),
           ),
+          Expanded(child: Container()),
+          _iconsDisplay()
         ],
       ),
     );
@@ -343,6 +348,39 @@ class _BodyContentWidgetState extends State<BodyContentWidget> {
     );
   }
 
+  Widget _iconsDisplay() {
+    return Row(
+      children: [
+        _displayListGrid(ConstantsImages.VIEW_MODULE_DARK,
+            ConstantsImages.VIEW_MODULE_LIGHT, true),
+        _displayListGrid(
+            ConstantsImages.LIST_LIGHT, ConstantsImages.LIST_DARK, false),
+      ],
+    );
+  }
+
+  Widget _displayListGrid(
+      String showTrue, String showFalse, bool isDisplayGrid) {
+    return Container(
+      width: 40,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          child: Container(
+            child: IconButton(
+              icon: WebsafeSvg.asset(_isDisplayGrid ? showTrue : showFalse),
+              onPressed: () {
+                setState(() {
+                  _isDisplayGrid = isDisplayGrid;
+                });
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _gridListItems() {
     return Expanded(
       child: Container(
@@ -357,100 +395,191 @@ class _BodyContentWidgetState extends State<BodyContentWidget> {
                       : 3,
               childAspectRatio: 1.7),
           itemBuilder: (context, index) {
-            return Container(
-              margin: EdgeInsets.only(
-                right: ResponsiveScreen().webWidthMediaQuery(context, 8),
-                top: ResponsiveScreen().webHeightMediaQuery(context, 8),
-                bottom: ResponsiveScreen().webHeightMediaQuery(context, 8),
-                left: ResponsiveScreen().webWidthMediaQuery(context, 8),
+            return _itemGridView(context, index);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _itemGridView(BuildContext context, int index) {
+    return Container(
+      margin: EdgeInsets.only(
+        right: ResponsiveScreen().webWidthMediaQuery(context, 8),
+        top: ResponsiveScreen().webHeightMediaQuery(context, 8),
+        bottom: ResponsiveScreen().webHeightMediaQuery(context, 8),
+        left: ResponsiveScreen().webWidthMediaQuery(context, 8),
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveScreen().webWidthMediaQuery(context, 28),
+        vertical: ResponsiveScreen().webHeightMediaQuery(context, 18),
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.2),
+            blurRadius: 2,
+            offset: Offset(0.5, 0.5),
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _dataBooking[index].name,
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
               ),
-              padding: EdgeInsets.symmetric(
-                horizontal: ResponsiveScreen().webWidthMediaQuery(context, 28),
-                vertical: ResponsiveScreen().webHeightMediaQuery(context, 18),
+              Text(
+                "Service",
+                style: TextStyle(color: Colors.grey[600], fontSize: 14),
               ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(.2),
-                    blurRadius: 2,
-                    offset: Offset(0.5, 0.5),
-                    spreadRadius: 2,
-                  ),
-                ],
+              Text(
+                "Flutter Development",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _dataBooking[index].name,
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                      ),
-                      Text(
-                        "Service",
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                      ),
-                      Text(
-                        "Flutter Development",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Date",
-                              style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 14)),
-                          Text(
-                            _dataBooking[index].date,
-                            style: TextStyle(fontSize: 16),
-                          )
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Time",
-                              style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 14)),
-                          Text(
-                            _dataBooking[index].time,
-                            style: TextStyle(fontSize: 16),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Accept Booking",
-                        style: TextStyle(fontSize: 18, color: Colors.indigo),
-                      ),
-                      Text("Decline"),
-                    ],
+                  Text("Date",
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                  Text(
+                    _dataBooking[index].date,
+                    style: TextStyle(fontSize: 16),
                   )
                 ],
               ),
-            );
-          },
-        ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Time",
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                  Text(
+                    _dataBooking[index].time,
+                    style: TextStyle(fontSize: 16),
+                  )
+                ],
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Accept Booking",
+                style: TextStyle(fontSize: 18, color: Colors.indigo),
+              ),
+              Text("Decline"),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _listViewItems() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: _dataBooking.length,
+        shrinkWrap: true,
+        itemBuilder: (BuildContext ctx, int index) {
+          return _itemListView(ctx, index);
+        },
+      ),
+    );
+  }
+
+  Widget _itemListView(BuildContext context, int index) {
+    return Container(
+      margin: EdgeInsets.only(
+        right: ResponsiveScreen().webWidthMediaQuery(context, 8),
+        top: ResponsiveScreen().webHeightMediaQuery(context, 8),
+        bottom: ResponsiveScreen().webHeightMediaQuery(context, 8),
+        left: ResponsiveScreen().webWidthMediaQuery(context, 8),
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveScreen().webWidthMediaQuery(context, 28),
+        vertical: ResponsiveScreen().webHeightMediaQuery(context, 18),
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.2),
+            blurRadius: 2,
+            offset: Offset(0.5, 0.5),
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _dataBooking[index].name,
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+              Text(
+                "Service",
+                style: TextStyle(color: Colors.grey[600], fontSize: 14),
+              ),
+              Text(
+                "Flutter Development",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Date",
+                  style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+              Text(
+                _dataBooking[index].date,
+                style: TextStyle(fontSize: 16),
+              )
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Time",
+                  style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+              Text(
+                _dataBooking[index].time,
+                style: TextStyle(fontSize: 16),
+              )
+            ],
+          ),
+        ],
       ),
     );
   }

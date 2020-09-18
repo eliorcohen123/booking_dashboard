@@ -1,3 +1,4 @@
+import 'package:booking_management_dashboard/constants/ConstantsImage.dart';
 import 'package:booking_management_dashboard/repository/fake_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -420,7 +421,7 @@ class _BodyContentTabletWidgetState extends State<BodyContentTabletWidget> {
               Container(
                 width: 80,
                 height: 80,
-                child: Image.asset("assets/profile.png"),
+                child: Image.asset(ConstantsImages.PROFILE),
               )
             ],
           ),
@@ -510,7 +511,7 @@ class _BodyContentTabletWidgetState extends State<BodyContentTabletWidget> {
           Container(
             height: 50,
             width: 50,
-            child: Image.asset("assets/pro.png"),
+            child: Image.asset(ConstantsImages.PRO),
           )
         ],
       ),

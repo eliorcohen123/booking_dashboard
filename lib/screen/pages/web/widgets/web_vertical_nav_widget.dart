@@ -1,3 +1,4 @@
+import 'package:booking_management_dashboard/constants/ConstantsImage.dart';
 import 'package:booking_management_dashboard/utils/responsive_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class _WebVerticalNavWidgetState extends State<WebVerticalNavWidget> {
     return Container(
       width: 45,
       height: 45,
-      child: Image.asset("assets/logo.png"),
+      child: Image.asset(ConstantsImages.LOGO),
     );
   }
 

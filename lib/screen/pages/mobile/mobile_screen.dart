@@ -1,3 +1,4 @@
+import 'package:booking_management_dashboard/constants/ConstantsImage.dart';
 import 'package:booking_management_dashboard/repository/fake_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,7 @@ class MobileScreen extends StatelessWidget {
           Container(
             height: 50,
             width: 50,
-            child: Image.asset("assets/pro.png"),
+            child: Image.asset(ConstantsImages.PRO),
           )
         ],
       ),

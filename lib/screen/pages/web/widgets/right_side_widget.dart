@@ -1,3 +1,4 @@
+import 'package:booking_management_dashboard/constants/ConstantsImage.dart';
 import 'package:booking_management_dashboard/utils/responsive_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -111,7 +112,7 @@ class RightSideWidget extends StatelessWidget {
               Container(
                 width: 80,
                 height: 80,
-                child: Image.asset("assets/profile.png"),
+                child: Image.asset(ConstantsImages.PROFILE),
               )
             ],
           ),
@@ -202,7 +203,7 @@ class RightSideWidget extends StatelessWidget {
           Container(
             height: 50,
             width: 50,
-            child: Image.asset("assets/pro.png"),
+            child: Image.asset(ConstantsImages.PRO),
           )
         ],
       ),
